@@ -1,8 +1,8 @@
 import os
-
-import jsonschema
 import subprocess
 from shutil import which
+
+import jsonschema
 
 UMOUNT_TOOLS = ['fusermount', 'fusermount3']
 HTTPDIRFS_EXECUTABLES = ['httpdirfs']
