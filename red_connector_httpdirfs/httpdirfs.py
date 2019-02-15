@@ -11,11 +11,18 @@ httpdirfs_access_schema = {
     'type': 'object',
     'properties': {
         'url': {'type': 'string'},
-        'username': {'type': 'string'},
-        'password': {'type': 'string'},
+        'auth': {
+            'type': 'object',
+            'properties': {
+                'username': {'type': 'string'},
+                'password': {'type': 'string'},
+            },
+            'additionalProperties': False,
+            'required': ['username', 'password']
+        },
     },
     'additionalProperties': False,
-    'required': ['url', 'username', 'password']
+    'required': ['url']
 }
 
 
@@ -37,21 +44,26 @@ class HttpDirFs:
     @staticmethod
     def receive_directory(access, internal, listing):
         url = access['url']
-        username = access['username']
-        password = access['password']
         path = internal['path']
 
-        httpdirfs = _get_httpdirfs_tool()
+        mount_tool = _get_httpdirfs_tool()
 
-        command = [
-            httpdirfs,
-            '--username',
-            '\'{}\''.format(username),
-            '--password',
-            '\'{}\''.format(password),
+        command = [mount_tool]
+
+        # add authentication
+        auth = access.get('auth')
+        if auth:
+            command.extend([
+                '--username',
+                '\'{}\''.format(auth['username']),
+                '--password',
+                '\'{}\''.format(auth['password']),
+            ])
+
+        command.extend([
             url,
             path
-        ]
+        ])
 
         command = ' '.join(command)
 
@@ -63,8 +75,14 @@ class HttpDirFs:
                                         shell=True)
 
         if process_result.returncode != 0:
-            raise Exception('Could not mount from "{}" for user "{}" using "{}":\n{}'
-                            .format(url, username, httpdirfs, process_result.stderr.decode('utf-8')))
+            if os.path.isdir(path):
+                os.rmdir(path)
+            if auth:
+                raise Exception('Could not mount from "{}" for user "{}" using "{}":\n{}'
+                                .format(url, auth['username'], mount_tool, process_result.stderr.decode('utf-8')))
+            else:
+                raise Exception('Could not mount from "{}" using "{}" without authentication:\n{}'
+                                .format(url, mount_tool, process_result.stderr.decode('utf-8')))
 
     @staticmethod
     def receive_directory_validate(access):
