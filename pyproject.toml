@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "red-connector-httpdirfs"
 version = "0.1"
-authors = ["Christoph Jansen <Christoph.Jansen@htw-berlin.de>"]
+authors = ["Bruno Schilling <s0555131@htw-berlin.de>", "Christoph Jansen <Christoph.Jansen@htw-berlin.de>"]
 license = "AGPL-3.0"
 readme = "README.md"
 repository = "https://github.com/curious-containers/red-connector-httpdirfs"
-homepage = "https://curious-containers.github.io/"
+homepage = "https://www.curious-containers.cc/"
 description = "RED Connector HTTP is part of the Curious Containers project."
 
 [tool.poetry.dependencies]
