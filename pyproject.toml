@@ -6,7 +6,7 @@ license = "AGPL-3.0"
 readme = "README.md"
 repository = "https://github.com/curious-containers/red-connector-httpdirfs"
 homepage = "https://www.curious-containers.cc/"
-description = "RED Connector HTTP is part of the Curious Containers project."
+description = "RED Connector HTTPDirFS is part of the Curious Containers project."
 
 [tool.poetry.dependencies]
 python = "^3.4"
